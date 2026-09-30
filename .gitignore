@@ -1,28 +1,11 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-
-# Distribution / build
-build/
-dist/
-*.egg-info/
-*.egg
-
-# Virtual environments
-.venv/
-venv/
-env/
-
-# uv
-uv.lock
-
-# macOS
+node_modules
+out
+dist
 .DS_Store
-
-# Editor
-.idea/
-.vscode/
-*.swp
+*.log
+.vite
+*.tsbuildinfo
+.venv
+legacy/build
+legacy/*.egg-info
+legacy/*.wav

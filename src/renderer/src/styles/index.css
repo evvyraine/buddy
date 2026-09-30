@@ -1,0 +1,546 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Buddy — design tokens
+   Warm monochrome surfaces, a single pink accent, two themes.
+   Motion scale follows the transitions.dev token set (duration + easing).
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --font-body:
+    'Onest Variable', 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-code: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* motion scale */
+  --dur-instant: 90ms;
+  --dur-quick: 150ms;
+  --dur-fast: 220ms;
+  --dur-medium: 300ms;
+  --dur-slow: 460ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.5, 1);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* radii */
+  --r-sm: 6px;
+  --r-md: 9px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+
+  /* light theme (warm paper) */
+  --canvas: #f6f5f2;
+  --surface: #ffffff;
+  --elevated: #fbfaf8;
+  --sunken: #efece7;
+  --line: #e7e4dd;
+  --line-strong: #d7d3ca;
+  --ink: #191816;
+  --muted: #6d6960;
+  --faint: #9a948a;
+  --shadow-tint: 34 30 24;
+
+  /* per-accent source hues */
+  --accent: #e8558f;
+  --accent-strong: #ce2f72;
+
+  --accent-current: var(--accent);
+  --accent-fill: var(--accent-strong);
+  --accent-text: color-mix(in oklab, var(--accent-strong) 86%, var(--ink));
+  --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+  --accent-ring: color-mix(in oklab, var(--accent) 42%, transparent);
+  --accent-contrast: #ffffff;
+
+  /* status (desaturated pastels, per minimalist-ui) */
+  --ok-bg: #edf3ec;
+  --ok-fg: #346538;
+  --warn-bg: #fbf3db;
+  --warn-fg: #8a5b00;
+  --err-bg: #fdebec;
+  --err-fg: #9f2f2d;
+  --info-bg: #e1f3fe;
+  --info-fg: #1f6c9f;
+
+  color-scheme: light;
+}
+
+[data-accent='rose'] {
+  --accent: #e24a63;
+  --accent-strong: #c42b47;
+}
+[data-accent='magenta'] {
+  --accent: #c247d6;
+  --accent-strong: #a11fb5;
+}
+[data-accent='violet'] {
+  --accent: #8b6cf6;
+  --accent-strong: #6e4be0;
+}
+[data-accent='amber'] {
+  --accent: #d08a16;
+  --accent-strong: #a96a00;
+}
+[data-accent='emerald'] {
+  --accent: #18a97a;
+  --accent-strong: #0c855f;
+}
+[data-accent='sky'] {
+  --accent: #2e93db;
+  --accent-strong: #0f72b8;
+}
+
+[data-theme='dark'] {
+  --canvas: #0d0c0b;
+  --surface: #151413;
+  --elevated: #1c1a18;
+  --sunken: #100f0e;
+  --line: #272421;
+  --line-strong: #38342e;
+  --ink: #f3f1ed;
+  --muted: #a5a199;
+  --faint: #6e6a63;
+  --shadow-tint: 0 0 0;
+
+  --accent-current: var(--accent);
+  --accent-fill: var(--accent);
+  --accent-text: color-mix(in oklab, var(--accent) 80%, #ffffff);
+  --accent-soft: color-mix(in oklab, var(--accent) 16%, transparent);
+  --accent-ring: color-mix(in oklab, var(--accent) 55%, transparent);
+  --accent-contrast: #1a0a12;
+
+  --ok-bg: color-mix(in oklab, #346538 26%, transparent);
+  --ok-fg: #9ad7a2;
+  --warn-bg: color-mix(in oklab, #8a5b00 28%, transparent);
+  --warn-fg: #ecc66a;
+  --err-bg: color-mix(in oklab, #9f2f2d 28%, transparent);
+  --err-fg: #f0a09e;
+  --info-bg: color-mix(in oklab, #1f6c9f 30%, transparent);
+  --info-fg: #8fc9ee;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent-current);
+  --color-accent-fill: var(--accent-fill);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+}
+
+/* ── base ─────────────────────────────────────────────────────────────── */
+
+@layer base {
+* {
+  box-sizing: border-box;
+  border-color: var(--line);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Base UI portals stay above every page layer. */
+.root {
+  isolation: isolate;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  user-select: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading {
+  font-family: var(--font-code);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.mono {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+}
+
+/* ── scrollbars ───────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--line-strong) 82%, transparent);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted) 60%, transparent);
+  background-clip: content-box;
+}
+
+/* ── focus ────────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--accent-current);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ── reduced / disabled motion ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html[data-motion='off'] *,
+html[data-motion='off'] *::before,
+html[data-motion='off'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   transitions.dev recipes
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* hover lift for cards */
+.lift {
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 10px rgb(var(--shadow-tint) / 0.05);
+  border-color: var(--line-strong);
+}
+
+/* skeleton → content cross-fade */
+@keyframes t-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--sunken) 20%,
+    color-mix(in oklab, var(--line) 70%, var(--sunken)) 50%,
+    var(--sunken) 80%
+  );
+  background-size: 200% 100%;
+  animation: t-shimmer 1.4s linear infinite;
+  border-radius: var(--r-sm);
+}
+
+/* toast: rises in with fade, blur and scale */
+@keyframes t-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+@keyframes t-rise-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    filter: blur(4px);
+  }
+}
+
+/* error shake — cubic-bezier shake */
+@keyframes t-shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+.shake {
+  animation: t-shake var(--dur-slow) cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* icon swap: scale + blur */
+.icon-swap {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+}
+.icon-swap > * {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) var(--ease-out);
+}
+.icon-swap .icon-in {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+.icon-swap .icon-out {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+  pointer-events: none;
+}
+.icon-swap[data-active='true'] .icon-in {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+}
+.icon-swap[data-active='true'] .icon-out {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+/* success check draws on */
+@keyframes t-check {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.check-path {
+  stroke-dasharray: 24;
+  animation: t-check var(--dur-slow) var(--ease-out) forwards;
+}
+
+/* number / digit reel */
+@keyframes t-reel {
+  from {
+    opacity: 0;
+    transform: translateY(-0.55em);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+.reel {
+  display: inline-block;
+  animation: t-reel var(--dur-fast) var(--ease-out);
+}
+
+/* text state swap with blur */
+@keyframes t-swap {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+.swap {
+  animation: t-swap var(--dur-fast) var(--ease-out);
+}
+
+/* thinking / streaming shimmer */
+@keyframes t-sweep {
+  from {
+    background-position: 160% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--faint) 0%,
+    var(--ink) 42%,
+    var(--faint) 60%,
+    var(--faint) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: t-sweep 2.4s linear infinite;
+}
+
+/* live record dot */
+@keyframes t-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+.rec-dot {
+  animation: t-pulse 1.5s var(--ease-in-out) infinite;
+}
+
+/* page entrance: panel reveal + blur */
+@keyframes t-page {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+.page-enter {
+  animation: t-page var(--dur-medium) var(--ease-out);
+}
+
+/* stagger helper */
+.stagger > * {
+  animation: t-page var(--dur-medium) var(--ease-out) both;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 45ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 90ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 135ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 180ms;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 225ms;
+}
+.stagger > *:nth-child(n + 7) {
+  animation-delay: 260ms;
+}
+
+/* ── overlay window ───────────────────────────────────────────────────── */
+
+.overlay-body {
+  background: transparent;
+}
+
+.glass {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, transparent), color-mix(in oklab, var(--surface) 96%, transparent));
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--line-strong) 70%, transparent);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.05) inset,
+    0 18px 40px -18px rgb(0 0 0 / 0.5);
+}

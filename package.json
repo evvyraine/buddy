@@ -1,0 +1,49 @@
+{
+  "name": "buddy",
+  "productName": "Buddy",
+  "version": "2.0.0",
+  "description": "Hold a key to record, release to transcribe. Everywhere on your system.",
+  "license": "MIT",
+  "author": "ehlvg",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "icons": "node scripts/gen-icons.mjs",
+    "predev": "node scripts/gen-icons.mjs",
+    "dev": "electron-vite dev",
+    "prebuild": "node scripts/gen-icons.mjs",
+    "build": "electron-vite build",
+    "prestart": "node scripts/gen-icons.mjs",
+    "start": "electron-vite preview",
+    "typecheck:node": "tsc -p tsconfig.node.json --noEmit",
+    "typecheck:web": "tsc -p tsconfig.web.json --noEmit",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "predist": "node scripts/gen-icons.mjs",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@breezystack/lamejs": "^1.2.7",
+    "@remixicon/react": "^4.9.0",
+    "uiohook-napi": "^1.5.5"
+  },
+  "devDependencies": {
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/onest": "^5.3.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "motion": "^13.4.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "zustand": "^5.0.15"
+  }
+}

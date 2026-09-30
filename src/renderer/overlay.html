@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-accent="pink">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buddy</title>
+    <script>
+      try {
+        var d = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.dataset.theme = d
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="overlay-body">
+    <div id="root"></div>
+    <script type="module" src="/src/overlay.tsx"></script>
+  </body>
+</html>
